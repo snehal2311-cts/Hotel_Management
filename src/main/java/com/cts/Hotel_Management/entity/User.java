@@ -8,6 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import io.micrometer.common.lang.NonNull;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,6 +18,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
@@ -28,7 +30,9 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+     
+    @Email(message = "Email is not valid", regexp = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")
+	@NotBlank(message="Email is required")
     @NotBlank(message = "Email is required")
     @Column(unique = true)
     private String email;
@@ -38,9 +42,15 @@ public class User implements UserDetails {
 
     @NotBlank(message = "Phone Number is required")
     private String phoneNumber;
-
+    
+    
+    @NonNull
     @NotBlank(message = "Password is required")
     private String password;
+    
+    @NonNull
+    @NotBlank(message = "Confirm Password is mandatory")
+    private String confirmPassword;
 
     private String role;
 
